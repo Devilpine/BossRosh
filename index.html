@@ -78,16 +78,17 @@
     }
     video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
     .hint { margin-top: 15px; color: rgba(255,255,255,.68); font-size: 13px; }
-    .start-overlay {
-      position: fixed; inset: 0; display: none; place-items: center;
-      background: rgba(0,0,0,.88); z-index: 10; padding: 24px;
-    }
-    .start-overlay button {
-      border: 0; border-radius: 999px; padding: 16px 26px;
+    .start-button {
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-top: 18px; border: 0; border-radius: 999px; padding: 15px 28px;
       background: linear-gradient(90deg, #ff3d7f, #ffb02e, #45e6a5, #43b9ff, #b17aff);
       color: #111; font: 900 16px system-ui, sans-serif;
       cursor: pointer; box-shadow: 0 8px 30px rgba(0,0,0,.4);
+      transition: transform .15s ease, filter .15s ease;
     }
+    .start-button:hover { transform: translateY(-2px) scale(1.03); filter: brightness(1.08); }
+    .start-button:active { transform: scale(.98); }
+    .status { min-height: 1.4em; margin: 10px 0 0; color: rgba(255,255,255,.75); font-size: 13px; }
     @media (max-width: 600px) {
       body { padding: 18px 12px; }
       h1 { letter-spacing: -1px; margin-bottom: 20px; }
@@ -106,22 +107,48 @@
       </video>
     </div>
     <p class="hint">😂 Certified Boss Rosh moments. Replay forever. 💀</p>
+    <button class="start-button" id="startButton" type="button">▶ Start video with sound</button>
+    <p class="status" id="videoStatus" aria-live="polite">Press start if the video doesn't autoplay.</p>
   </main>
-  <div class="start-overlay" id="startOverlay">
-    <button id="startButton" type="button">▶ Play with sound</button>
-  </div>
   <script>
     const video = document.getElementById('prankVideo');
-    const overlay = document.getElementById('startOverlay');
     const startButton = document.getElementById('startButton');
+    const status = document.getElementById('videoStatus');
+
+    video.loop = true;
+    video.playsInline = true;
     video.muted = false;
     video.defaultMuted = false;
-    video.loop = true;
-    video.play().catch(() => { overlay.style.display = 'grid'; });
+
+    // Browsers may block autoplay with audio. The visible button provides
+    // a direct user gesture to start playback with sound.
+    video.play().then(() => {
+      status.textContent = 'Now playing with sound 🔊';
+    }).catch(() => {
+      status.textContent = 'Autoplay was blocked. Press the button to start with sound.';
+    });
+
     startButton.addEventListener('click', async () => {
+      video.pause();
       video.muted = false;
-      try { await video.play(); overlay.style.display = 'none'; }
-      catch (error) { startButton.textContent = 'Tap to try again'; }
+      video.defaultMuted = false;
+      status.textContent = 'Starting video…';
+      try {
+        await video.play();
+        status.textContent = 'Now playing with sound 🔊';
+        startButton.textContent = '▶ Restart video';
+      } catch (error) {
+        status.textContent = video.error
+          ? 'Video file could not be loaded. Make sure video.mp4 is beside index.html.'
+          : 'Playback was blocked. Check that video.mp4 is available, then try again.';
+      }
+    });
+
+    video.addEventListener('playing', () => {
+      status.textContent = video.muted ? 'Playing muted' : 'Now playing with sound 🔊';
+    });
+    video.addEventListener('error', () => {
+      status.textContent = 'Could not load video.mp4. Put the video in the same folder as index.html.';
     });
   </script>
 </body>
