@@ -19,7 +19,6 @@
       position: relative;
       isolation: isolate;
     }
-    /* Low-opacity meme-style emoji wallpaper */
     body::before {
       content: "😂      💀       🤣      🗿       😭      🤡       😂      💀       🤣      🗿       😭      🤡";
       position: fixed;
@@ -120,8 +119,6 @@
     video.muted = false;
     video.defaultMuted = false;
 
-    // Browsers may block autoplay with audio. The visible button provides
-    // a direct user gesture to start playback with sound.
     video.play().then(() => {
       status.textContent = 'Now playing with sound 🔊';
     }).catch(() => {
