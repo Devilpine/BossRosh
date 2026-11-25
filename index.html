@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boss Rosh Moments</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: radial-gradient(ellipse at 50% 35%, #29203c 0%, #11101c 48%, #08090c 100%);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      padding: 28px 20px;
+      position: relative;
+      isolation: isolate;
+    }
+    /* Low-opacity meme-style emoji wallpaper */
+    body::before {
+      content: "😂      💀       🤣      🗿       😭      🤡       😂      💀       🤣      🗿       😭      🤡";
+      position: fixed;
+      inset: -10%;
+      z-index: -1;
+      display: block;
+      color: rgba(255,255,255,.10);
+      font-size: clamp(32px, 5vw, 68px);
+      line-height: 2.1;
+      letter-spacing: 22px;
+      overflow-wrap: anywhere;
+      transform: rotate(-12deg) scale(1.15);
+      pointer-events: none;
+      user-select: none;
+      filter: blur(.25px);
+    }
+    body::after {
+      content: "MEME MODE  •  BRUH  •  NO WAY  •  LOL  •  MOMENT  •  MEME MODE  •  BRUH  •  NO WAY";
+      position: fixed;
+      inset: auto -5% 8% -5%;
+      z-index: -1;
+      color: rgba(255,255,255,.055);
+      font-size: clamp(14px, 2.2vw, 25px);
+      font-weight: 1000;
+      letter-spacing: 8px;
+      white-space: nowrap;
+      transform: rotate(-5deg);
+      pointer-events: none;
+      user-select: none;
+    }
+    main { width: min(100%, 960px); text-align: center; position: relative; }
+    h1 {
+      margin: 0 0 25px;
+      font-size: clamp(36px, 7vw, 76px);
+      line-height: 1.05;
+      font-weight: 1000;
+      letter-spacing: -2px;
+      background: linear-gradient(90deg, #ff3d7f, #ffb02e, #f9f871, #45e6a5, #43b9ff, #b17aff, #ff3d7f);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: rainbowFlow 5s linear infinite, titleFloat 3s ease-in-out infinite;
+      filter: drop-shadow(0 4px 16px rgba(255,255,255,.12));
+    }
+    @keyframes rainbowFlow { to { background-position: 300% 50%; } }
+    @keyframes titleFloat { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-7px) rotate(1deg); } }
+    .video-wrap {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,.18);
+      border-radius: 18px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.65), 0 0 35px rgba(177,122,255,.18);
+    }
+    video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
+    .hint { margin-top: 15px; color: rgba(255,255,255,.68); font-size: 13px; }
+    .start-overlay {
+      position: fixed; inset: 0; display: none; place-items: center;
+      background: rgba(0,0,0,.88); z-index: 10; padding: 24px;
+    }
+    .start-overlay button {
+      border: 0; border-radius: 999px; padding: 16px 26px;
+      background: linear-gradient(90deg, #ff3d7f, #ffb02e, #45e6a5, #43b9ff, #b17aff);
+      color: #111; font: 900 16px system-ui, sans-serif;
+      cursor: pointer; box-shadow: 0 8px 30px rgba(0,0,0,.4);
+    }
+    @media (max-width: 600px) {
+      body { padding: 18px 12px; }
+      h1 { letter-spacing: -1px; margin-bottom: 20px; }
+      .video-wrap { border-radius: 9px; }
+    }
+    @media (prefers-reduced-motion: reduce) { h1 { animation: none; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Boss Rosh Moments</h1>
+    <div class="video-wrap">
+      <video id="prankVideo" autoplay loop playsinline controls>
+        <source src="/Video/mp4.mp4" type="video/mp4" />
+        Your browser does not support video playback.
+      </video>
+    </div>
+    <p class="hint">😂 Certified Boss Rosh moments. Replay forever. 💀</p>
+  </main>
+  <div class="start-overlay" id="startOverlay">
+    <button id="startButton" type="button">▶ Play with sound</button>
+  </div>
+  <script>
+    const video = document.getElementById('prankVideo');
+    const overlay = document.getElementById('startOverlay');
+    const startButton = document.getElementById('startButton');
+    video.muted = false;
+    video.defaultMuted = false;
+    video.loop = true;
+    video.play().catch(() => { overlay.style.display = 'grid'; });
+    startButton.addEventListener('click', async () => {
+      video.muted = false;
+      try { await video.play(); overlay.style.display = 'none'; }
+      catch (error) { startButton.textContent = 'Tap to try again'; }
+    });
+  </script>
+</body>
+</html>
